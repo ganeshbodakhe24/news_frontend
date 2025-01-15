@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summaries</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesummaries.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function fetchArticles() {
+            $.getJSON('/articles_data', function(data) {
+                var articlesList = $('#articles-list');
+                articlesList.empty();
+
+                if (data.length > 0) {
+                    data.forEach(function(article) {
+                        articlesList.append(
+                            '<li>' +
+                            '<h2>' + article.title + '</h2>' +
+                            '<p>' + article.summary + '</p>' +
+                            '<p><strong>Question:</strong> ' + article.question + '</p>' +
+                            '<p><strong>Category:</strong> ' + article.category + '</p>' +
+                            '<p><strong>Sentiment:</strong> ' + article.sentiment + '</p>' +
+                            '<p><strong>Published on:</strong> ' + article.timestamp + '</p>' +  // Display the timestamp
+                            '<p><a href="' + article.link + '" target="_blank">Read full article</a></p>' +
+                            (article.image_url !== "No image available" ? 
+                                '<img src="' + article.image_url + '" alt="Article Image" style="max-width: 100%; height: auto; border-radius: 5px; margin-top: 10px;">' : 
+                                '') +
+                            '</li>'
+                        );
+                    });
+                } else {
+                    articlesList.append('<li>No articles available.</li>');
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            fetchArticles();
+            setInterval(fetchArticles, 30000); // Fetch every 30 seconds
+        });
+    </script>
+</head>
+<body>
+    <div class="header-container">
+        <h1>Summaries for Selected Preferences</h1>
+        <header>
+            <span class="username">{{ session.username }}</span>
+            <a href="{{ url_for('preferences') }}" class="edit-preferences-button">Edit Preferences</a>
+            <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+        </header>
+    </div>
+    
+    <ul id="articles-list">
+        <li>Loading articles...</li>
+    </ul>
+
+    <style>
+        .logout-button {
+            margin-left: 20px;
+            text-decoration: none;
+            color: white;
+            background-color: red;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+        .logout-button:hover {
+            background-color: darkred;
+        }
+    </style>
+</body>
+</html>
