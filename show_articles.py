@@ -133,10 +133,13 @@ def preferences():
 
         return render_template('preferences.html', available_keywords=available_keywords, existing_preferences=existing_preferences)
 
+# if __name__ == '__main__':
+#     app.run(debug=True, port=5001)
+
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
-
-
+    port = int(os.environ.get('PORT', 5000))  # Use port assigned by Render, default to 5000 if not set
+    app.run(debug=True, host='0.0.0.0', port=port)
+    
 # from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 # from flask_mysqldb import MySQL
 # import MySQLdb
