@@ -6,10 +6,15 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
 # MySQL Configurations
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'login'
+# app.config['MYSQL_HOST'] = 'localhost'
+# app.config['MYSQL_USER'] = 'root'
+# app.config['MYSQL_PASSWORD'] = ''
+# app.config['MYSQL_DB'] = 'login'
+
+app.config['MYSQL_HOST'] = 'sql5.freesqldatabase.com'
+app.config['MYSQL_USER'] = 'sql5757769'
+app.config['MYSQL_PASSWORD'] = 'sFTVKFAirZ'
+app.config['MYSQL_DB'] = 'sql5757769'
 mysql = MySQL(app)
 
 
