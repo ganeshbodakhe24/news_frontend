@@ -533,7 +533,7 @@ def contact():
             """
 
             msg = Message(subject=subject,
-                          recipients=['ehr.maharastra.'],  # Replace with actual admin email
+                          recipients=['shubhamgormati@gmail.com'],  # Replace with actual admin email
                           body=body)
             mail.send(msg)
 
