@@ -1,0 +1,66 @@
+<nav class="navbar navbar-expand-lg navbar-custom px-4">
+
+    <a class="navbar-brand" href="/">NewsMiner</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link " href="/">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('About') }}">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('all_trending_articles_page') }}">Trending</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('recommended_articles') }}">Recommendations</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link"href="{{ url_for('contact') }}">Contact</a>
+</li>
+
+        </ul>
+        <!-- search bar -->
+    <form action="/search" method="get" class="search_bar">
+        <input type="search" placeholder="Search..." class="search-input" name="query" id="searchInput" required>
+        <button class="search-btn" type="submit"><i class="bi bi-search"></i></button>
+    </form>
+
+        <div class="d-flex align-items-center gap-2 user-info">
+    {% if logged_in %}
+        <i class="text-dark bi bi-person-circle  fs-4"></i>
+        <span class="" style="cursor: pointer;">{{ session.username }}</span>
+        {% if not on_preferences_page %}
+            <a class="btn text-white btn-lg" href="{{ url_for('preferences') }}"
+               data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Edit Preferences">
+               <i class="bi bi-pencil-square"></i>
+            </a>
+        {% endif %}
+
+        <a class="btn  btn-lg" href="{{ url_for('logout') }}"
+           data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Logout">
+           <i class="bi bi-box-arrow-right"></i>
+        </a>
+    {% else %}
+        <a class="btn btn-outline-light btn-sm" href="{{ url_for('register') }}">Sign Up</a>
+        <a class="btn btn-outline-light btn-sm" href="{{ url_for('login') }}">Login</a>
+    {% endif %}
+</div>
+    </div>
+</nav>
+<!-- Bootstrap + Popper (needed for tooltip) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+<!-- Tooltip Initialization -->
+<script>
+  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl =>
+    new bootstrap.Tooltip(tooltipTriggerEl)
+  )
+</script>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Explore all trending articles at one place.">
+  <title>NewsMiner - Trending Articles</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='stylesummery.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='global_css.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='footer.css') }}" />
+
+
+  <style>
+    
+
+    .card-img-top {
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .card-text {
+      max-height: 4.5em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+    }
+
+  </style>
+</head>
+
+<body>
+  <!-- {% include 'Treading_Nav.html' %} -->
+    {% include 'navbar.html' %}
+
+  <div class="container py-5">
+    <h1 class="text-center mb-5">Trending Articles</h1>
+    <div class="row" id="trending-articles">
+      <!-- Articles will be injected dynamically here -->
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-center my-4" id="pagination-controls">
+    <button class="btn btn-secondary me-2" id="prev-btn" disabled>Previous</button>
+    <span id="page-info" class="align-self-center"></span>
+    <button class="btn btn-secondary ms-2" id="next-btn" disabled>Next</button>
+  </div>
+
+    <!-- footer -->
+     {% include 'footer.html' %}
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- icon script -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" width="100%"></script>
+  <script>
+    function truncateText(text, wordLimit) {
+      let words = text.split(' ');
+      return words.length > wordLimit ? words.slice(0, wordLimit).join(' ') + '...' : text;
+    }
+
+    function fetchTrendingArticles() {
+      $.getJSON('/all_trending_articles')
+        .done(function (data) {
+          let articlesGrid = $('#trending-articles');
+          articlesGrid.empty();
+          if (data.length > 0) {
+            data.forEach(function (article) {
+              const truncatedSummary = truncateText(article.summary || "No summary available", 20);
+              const imageUrl = article.image_url || '/static/images/default-image.jpg';
+              articlesGrid.append(`
+                                <div class="col-lg-4 col-md-6 mb-4">
+                                    <div class="card">
+                                        <img src="${imageUrl}" class="card-img-top" alt="${article.title}">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${article.title}</h5>
+                                            <p class="card-text">${truncatedSummary}</p>
+                                            <div class="mt-auto  ">
+                                                  <a href="${article.link}" class="btn custom_btn_color  me-2" target="_blank" rel="noopener noreferrer">Read More</a>
+                                                  <a href="/full_summary/${article.id}" class="btn custom_btn_color_1 ">View Full Summary</a>
+                                           </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+            });
+          } else {
+            articlesGrid.append('<p class="text-center text-muted">No articles available.</p>');
+          }
+        })
+        .fail(function () {
+          $('#trending-articles').html('<p class="text-danger text-center">Failed to fetch articles. Please try again later.</p>');
+        });
+    }
+
+
+    $(document).ready(function () {
+      fetchTrendingArticles();
+      setInterval(fetchTrendingArticles, 3000); // Fetch every 3 seconds
+    });
+  </script>
+  <script>
+    let allArticles = [];
+    const articlesPerPage = 9;
+    let currentPage = 1;
+    let totalPages = 1;
+
+    function truncateText(text, wordLimit) {
+      let words = text.split(' ');
+      return words.length > wordLimit ? words.slice(0, wordLimit).join(' ') + '...' : text;
+    }
+
+    function renderPage(page) {
+      const startIndex = (page - 1) * articlesPerPage;
+      const endIndex = startIndex + articlesPerPage;
+      const pageArticles = allArticles.slice(startIndex, endIndex);
+
+      let articlesGrid = $('#trending-articles');
+      articlesGrid.empty();
+
+      if (pageArticles.length === 0) {
+        articlesGrid.append('<p class="text-center text-muted">No articles available.</p>');
+        return;
+      }
+
+      pageArticles.forEach(article => {
+        const truncatedSummary = truncateText(article.summary || "No summary available", 20);
+        const imageUrl = article.image_url || '/static/images/default-image.jpg';
+        articlesGrid.append(`
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card">
+          <img src="${imageUrl}" class="card-img-top" alt="${article.title}">
+          <div class="card-body">
+            <h5 class="card-title">${article.title}</h5>
+            <p class="card-text">${truncatedSummary}</p>
+            <div class="mt-auto d-flex justify-content-around ">
+                        <a href="${article.link}" class="btn custom_btn_color  me-2" target="_blank" rel="noopener noreferrer">Read More</a>
+                        <a href="/full_summary/${article.id}" class="btn custom_btn_color_1 ">View Full Summary</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `);
+      });
+
+      // Update pagination buttons and info
+      $('#page-info').text(`Page ${currentPage} of ${totalPages}`);
+      $('#prev-btn').prop('disabled', currentPage === 1);
+      $('#next-btn').prop('disabled', currentPage === totalPages);
+
+      // Save current page in localStorage
+      localStorage.setItem('newsMinerCurrentPage', currentPage);
+    }
+
+    function fetchTrendingArticles() {
+      $.getJSON('/all_trending_articles')
+        .done(function (data) {
+          allArticles = data;
+          totalPages = Math.ceil(allArticles.length / articlesPerPage);
+
+          // On first load, get saved page or default to 1
+          const savedPage = localStorage.getItem('newsMinerCurrentPage');
+          currentPage = savedPage ? parseInt(savedPage) : 1;
+
+          // Safety check in case saved page > total pages
+          if (currentPage > totalPages) currentPage = totalPages || 1;
+
+          renderPage(currentPage);
+        })
+        .fail(function () {
+          $('#trending-articles').html('<p class="text-danger text-center">Failed to fetch articles. Please try again later.</p>');
+        });
+    }
+
+    $(document).ready(function () {
+      fetchTrendingArticles();
+      setInterval(fetchTrendingArticles, 30000); // Refresh every 30 seconds, adjust as needed
+
+      $('#prev-btn').click(function () {
+        if (currentPage > 1) {
+          currentPage--;
+          renderPage(currentPage);
+        }
+      });
+
+      $('#next-btn').click(function () {
+        if (currentPage < totalPages) {
+          currentPage++;
+          renderPage(currentPage);
+        }
+      });
+    });
+
+  </script>
+
+
+</body>
+
+</html>

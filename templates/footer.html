@@ -1,0 +1,83 @@
+<!-- footer -->
+<div class="container-fluid mt-5 footer_bg">
+    <div class="row t d-flex justify-content-center">
+        <div class="container">
+            <div class="row mt-5">
+
+                <div class=" col-sm-5 col-lg-4 ml-3">
+                    <a href="{{ url_for('articles') }}">
+                        <img src="../static/images/logo.png" alt="Logo" class="img-fluid d-block mx-auto">
+                    </a>
+
+                    <p class="mt-3">
+                        NewsMiner is a cutting-edge platform that provides users with personalized,
+                        sentiment-driven news recommendations. Stay informed with quick summaries and explore public
+                        opinion through detailed sentiment analysis and opinion mining.
+                    </p>
+
+                    <!-- icon -->
+                    <div class="col-12 d-flex align-self-center">
+
+                        <!-- Facebook -->
+                        <div>
+                            <a class="ml-2 rounded-circle info-circle" href="#" target="_blank" rel="noopener">
+                                <ion-icon name="logo-facebook"></ion-icon>
+                            </a>
+                        </div>
+                        <!-- Instagram -->
+                        <a class="ml-2 rounded-circle info-circle" href="#" target="_blank" rel="noopener">
+                            <ion-icon name="logo-instagram"></ion-icon>
+                        </a>
+
+                        <!-- Twitter (your existing) -->
+                        <a class="ml-2 rounded-circle info-circle" href="#" target="_blank" rel="noopener">
+                            <ion-icon name="logo-twitter"></ion-icon>
+                        </a>
+                    </div>
+                </div>
+                <!-- quick line -->
+                <div class="col-sm-2 col-lg-2 mt-4">
+                    <h5>Quick Line</h5>
+                    <ul style="list-style: none;  line-height: 30px;">
+                        <li><a href="{{ url_for('articles') }}" class=" no-underline">Home</a></li>
+                        <li><a href="{{ url_for('About') }}" class=" no-underline">About</a></li>
+                        <li><a href="{{ url_for('all_trending_articles_page') }}" class=" no-underline">Trending</a>
+                        </li>
+                       
+                    </ul>
+                </div>
+                <!-- quick line -->
+
+                <div class="col-sm-3 col-lg-2  mt-4">
+                    <h5>Quick Line</h5>
+                    <ul style="list-style: none;  line-height: 30px;">
+                         <li><a href="{{ url_for('recommended_articles') }}" class="no-underline">Recommendations</a></li>
+                        <li><a href="{{ url_for('contact') }}"  class="no-underline">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- map -->
+                <div class="col-lg-3 mt-4 ">
+                    <h4 class="text-center">Office Location</h4>
+                    <div class="mt-2 ml-2 mb-3 rounded text-center" style="overflow: hidden;">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30178.960310986116!2d73.90789732216408!3d19.00340916995726!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bdd30d128913813%3A0x908cd5c41e4b8673!2sManchar%2C%20Maharashtra%20410503!5e0!3m2!1sen!2sin!4v1704944574064!5m2!1sen!2sin"
+                            width="80%" height="200" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- Footer -->
+    <footer class="section text-center text-light py-3">
+        <div class="container">
+            <p>&copy; 2025 NewsMiner. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+
+<!-- main end -->
+</div>

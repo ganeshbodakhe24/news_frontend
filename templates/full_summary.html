@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Detail - NewsMiner</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesummery.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='global_css.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='footer.css') }}" />
+
+      <!-- icon script -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" width="100%"></script>
+    <style>
+        .comment_div {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            position: relative;
+        }
+
+        .comment_img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .comment_img img {
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .comment_text {
+            width: 80%;
+            margin-left: 3%;
+            display: flex;
+            align-items: center;
+        }
+
+        .user_comment_info {
+            position: absolute;
+            bottom: -25px;
+            right: 0px;
+        }
+
+       
+
+        @media (max-width: 900px) {
+            .comment_img {
+                width: 15px;
+                height: 15px;
+            }
+        }
+
+        .article-image {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+        }
+
+        .white-stripe {
+            background-color: #f8f9fa;
+            height: 75px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+       
+
+        .news_question {
+            font-size: larger;
+        }
+
+        .short-comment {
+            width: 100%;
+        }
+
+        .comment_text p {
+            word-wrap: break-word;
+            /* Ensure long words break to next line */
+            white-space: normal;
+            /* Allow normal wrapping */
+            overflow-wrap: break-word;
+            max-width: 100%;
+        }
+
+        .comment_outer_div {
+            overflow: visible;
+            /* Make sure container doesn't cut off content */
+        }
+    </style>
+</head>
+
+<body>
+
+    {% include 'navbar.html' %}
+
+    <div class="container mt-4">
+        <div class="row mt-3">
+            <!-- Article Section -->
+            <div class="col-md-8">
+                <h3>{{ article.title }}</h3>
+                <p><small>{{ article.category }} | Published on: {{ article.timestamp }}</small></p>
+                <img src="{{ article.image_url or '/static/images/default-image.jpg' }}" class="article-image"
+                    alt="{{ article.title }}">
+                <p><strong>Summary:</strong></p>
+                <p>{{ article.summary }}</p>
+                <p>
+                    Sentiment: <span class="custom-sentiment {{ article.sentiment|lower }}">{{ article.sentiment
+                        }}</span>
+                </p>
+
+                <hr>
+                <div>
+                    <p class="news_question">{{ article.question }}</p>
+                </div>
+
+                <h6>Add your opinion:</h6>
+                {% if logged_in %}
+                <form action="{{ url_for('add_comment', article_id=article.id) }}" method="post">
+                    <div class="mb-3">
+                        <textarea class="form-control" name="comment" rows="3" placeholder="Share your opinion..."
+                            required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-secondary btn-sm">Send</button>
+                </form>
+                {% else %}
+                <p class="text-muted mt-3">
+                    <a href="{{ url_for('login') }}" class="btn custom_btn_color_2 btn-sm">Log in</a> to add a comment.
+                </p>
+                {% endif %}
+
+                <div class="mt-4">
+                    <h6>Comments:</h6>
+                    {% if comments %}
+                    {% for comment in comments %}
+                    <div class="comment_outer_div container mb-5">
+                        <div class="comment_div">
+                            <div class="comment_img">
+                                <img src="/static/user.png" alt="user">
+                            </div>
+                            <div class="comment_text">
+                                <p>
+                                    <span class="short-comment">
+                                        {% set comment_text = comment.comment_text %}
+                                        {% if comment_text|length > 20 %}
+                                        <span class="short-comment">{{ comment_text[:20] }}...</span>
+                                        <span class="full-comment d-none">{{ comment_text | e }}</span>
+                                        <span class="read_more">Read more</span>
+                                        {% else %}
+                                        <span class="full-comment">{{ comment_text | e }}</span>
+                                        {% endif %}
+                                    </span>
+                                    <span class="full-comment d-none">
+                                        {{ comment.comment_text | e }}
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="user_comment_info">
+                                <p>{{ comment.username }} | {{ comment.timestamp.strftime('%Y-%m-%d %H:%M') }}</p>
+                            </div>
+                        </div>
+                        <hr class="border border-secondary">
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p class="text-muted">No comments yet. Be the first to share your opinion!</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Related Articles Section -->
+            <div class="col-md-4">
+                <h5>Related Articles</h5>
+                {% for related in related_articles %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h6 class="card-title">{{ related.title }}</h6>
+                        <p class="card-text">{{ related.summary[:100] }}...</p>
+                        <a href="{{ url_for('full_summary', article_id=related.id) }}"
+                            class="btn custom_btn_color_3 btn-sm">Read Article</a>
+                    </div>
+                </div>
+                {% else %}
+                <p>No related articles found.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+      <!-- footer -->
+     {% include 'footer.html' %}
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Comment Read More Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const readMoreElements = document.querySelectorAll('.read_more');
+
+            readMoreElements.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const short = btn.previousElementSibling.previousElementSibling;
+                    const full = btn.previousElementSibling;
+
+                    short.classList.add('d-none');
+                    full.classList.remove('d-none');
+                    btn.style.display = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

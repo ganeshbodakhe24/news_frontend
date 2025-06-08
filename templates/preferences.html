@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Preferences - NewsMiner</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Roboto:wght@400;500;700&display=swap"
+        rel="stylesheet" />
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesummery.css') }}" />
+    <!-- footer -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='footer.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='global_css.css') }}" />
+
+
+    <!-- icon script -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" width="100%"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            max-width: 800px;
+            margin: auto;
+            padding: 0 20px;
+        }
+
+        .checkbox-grid label {
+            background: white;
+            border: 1px solid #dee2e6;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .checkbox-grid input[type="checkbox"] {
+            transform: scale(1.2);
+        }
+
+        .checkbox-grid label:hover {
+            background-color: #e9ecef;
+        }
+
+        .button-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .button-container button {
+            padding: 10px 25px;
+            font-size: 16px;
+            border: none;
+            /* background-color: #0d6efd; */
+            color: white;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+        }
+
+        .button-container button:hover {
+            color: white;
+
+            /* background-color: #084298; */
+        }
+    </style>
+
+    <script>
+        function validateForm(event) {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const isChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+            if (!isChecked) {
+                alert("Please select at least one preference.");
+                event.preventDefault();
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+    <!-- Bootstrap Responsive Navbar -->
+    <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+    <a class="navbar-brand" href="/">NewsMiner</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link active" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('About') }}">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('all_trending_articles_page') }}">Trending</a>
+            </li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-2">
+            {% if logged_in %}
+                <i class="bi bi-person-circle text-white fs-4"></i>
+                <span class="text-white">{{ session.username }}</span>
+                <a class="btn btn-outline-light btn-sm" href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a class="btn btn-outline-light btn-sm" href="{{ url_for('register') }}">Sign Up</a>
+                <a class="btn btn-outline-light btn-sm" href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </div>
+    </div>
+</nav> -->
+    {% include 'navbar.html' %}
+
+    <!-- Preferences Form -->
+    <h1>Select Your Preferences</h1>
+    <form method="POST" action="{{ url_for('preferences') }}" onsubmit="validateForm(event)">
+        <div class="checkbox-grid">
+            {% for keywords in available_keywords %}
+            <label>
+                <input type="checkbox" name="preferences" value="{{ keywords }}" {% if keywords in existing_preferences
+                    %} checked {% endif %}>
+                <span>{{ keywords }}</span>
+            </label>
+            {% endfor %}
+        </div>
+
+        <div class="button-container">
+            <button class="btn custom_btn_color_2" type="submit">Save Preferences</button>
+        </div>
+    </form>
+
+    <!-- footer -->
+    {% include 'footer.html' %}
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
